@@ -3,7 +3,7 @@
 """
 Created on Thu Sep 29 22:03:07 2022
 
-@author: Zepei Yang
+@author: jiomer
 """
 #%%
 #import nis
@@ -29,6 +29,20 @@ def Bv(Tb,v):
     k = 1.38e-23
     
     return 2*k*v**2*Tb/c**2
+
+def QAQ(theta_q1,phi_q1,theta_f,phi_f,theta_m,phi_m):
+    theta_q = np.arccos(np.sin(theta_q1)*np.cos(phi_f-phi_q1)*np.sin(theta_f)+np.cos(theta_q1)*np.cos(theta_f))
+    phi_q = np.arctan((np.sin(theta_q1)*np.cos(phi_f-phi_q1)*np.cos(theta_f)-np.cos(theta_q1)*np.sin(theta_f))/(np.sin(theta_q1)*np.sin(phi_f-phi_q1)))-np.arctan((-np.sin(theta_m)*np.sin(phi_m-phi_f)*np.cos(theta_f)+np.cos(theta_m)*np.sin(theta_f))/(np.sin(theta_m)*np.sin(phi_m-phi_f)))
+    #phi_q = np.abs(phi_q)
+    return theta_q,phi_q
+
+def cof(theta_q,phi_q,lmd,R,q=10**18):
+    R = R*1000
+    re = 2.818e-15
+    Gr = 1
+    A = 1 #lmd**2/(4*np.pi)
+    k = Gr*A*(lmd/(2*R*np.sin(theta_q)**2*np.sqrt(np.e/(re*q))+np.sqrt(lmd/np.pi)*np.sin(theta_q)*np.cos(phi_q))) #k是反射系数
+    return k
 
 
 def MTvec2ang(x,y,z):
@@ -91,23 +105,11 @@ def vec2ang(vec_x,vec_y,vec_z):
     else:
         theta = np.arccos(z)
         sin_theta = np.sqrt(1-z**2)
-        if sin_theta > 1:
-            sin_theta = 1
-        elif sin_theta < -1:
-            sin_theta = -1
-        else:
-            pass
-
         #print("sin theta",sin_theta)
         cos_phi = x/sin_theta
         if cos_phi > 1:
             cos_phi = 1
-        elif cos_phi < -1:
-            cos_phi = -1
-        else:
-            pass
         #print("cos theta",cos_phi)
-        
         sin_phi = y/sin_theta
         if sin_phi > 1:
             sin_phi = 1
@@ -165,7 +167,7 @@ def getwl(Mm,wlo):
     x0 = wlo[0]
     y0 = wlo[1]
     z0 = wlo[2]
-    x1 = x0 + Mm[0]
+    x1 = x0 + Mm[0] 
     y1 = y0 + Mm[1]
     z1 = z0 + Mm[2]
     
