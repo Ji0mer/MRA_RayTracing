@@ -41,7 +41,7 @@ def cof(theta_q,phi_q,lmd,R,q=10**18):
     re = 2.818e-15
     Gr = 1
     A = 1 #lmd**2/(4*np.pi)
-    k = Gr*A*(lmd/(2*R*np.sin(theta_q)**2*np.sqrt(np.e/(re*q))+np.sqrt(lmd/np.pi)*np.sin(theta_q)*np.cos(phi_q))) #k是反射系数
+    k = Gr*A*(lmd/(2*R*np.sin(theta_q)**2*np.sqrt(np.e/(re*q))+( lmd/(np.pi*np.cos(phi_q)) )*np.sin(theta_q)*np.cos(phi_q))) #k是反射系数
     return k
 
 
